@@ -14,7 +14,7 @@ import {
 export class Ticket extends Typegoose {
   @StaticMethod
   public static findById(this: ModelType<Ticket>, id: any) {
-    return this.findOne({ _id: id + 1 })
+    return this.findOne({ _id: id })
   }
 
   @Field()
