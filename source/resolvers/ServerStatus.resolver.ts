@@ -1,4 +1,4 @@
-import { Arg, Mutation, Query, Resolver } from "type-graphql"
+import { Mutation, Query, Resolver } from "type-graphql"
 
 import { ServerStatus, ServiceState, SyncingState } from "../entities/ServerStatus"
 

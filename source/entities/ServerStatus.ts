@@ -16,14 +16,14 @@ export enum SyncingState {
 @ObjectType({ description: "The server status" })
 export class ServerStatus {
   @Field()
-  public graphql = ServiceState.stopped
+  public graphql: ServiceState = ServiceState.stopped
 
   @Field()
-  public tickets = ServiceState.stopped
+  public tickets: ServiceState = ServiceState.stopped
 
   @Field()
-  public ticketapi = SyncingState.notInitialized
+  public ticketapi: SyncingState = SyncingState.notInitialized
 
   @Field()
-  public omdbapi = SyncingState.notInitialized
+  public omdbapi: SyncingState = SyncingState.notInitialized
 }
