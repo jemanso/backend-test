@@ -1,3 +1,7 @@
+import * as dotenv from "dotenv"
+
+dotenv.config()
+
 // Ticket API
 export const TICKET_API_URL =
   process.env.TICKET_API_URL ||
