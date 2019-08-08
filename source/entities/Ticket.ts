@@ -46,11 +46,7 @@ export class Ticket extends Typegoose {
 
   @InstanceMethod
   public saveFields(this: InstanceType<Ticket>) {
-    // Inventory should always be at least 0
     this.inventory = Math.max(this.inventory || 0, 0)
-    if (this && Math.floor(Math.random() * 6) + 1 === 3) {
-      this.inventory = -1
-    }
     return this.save()
   }
 }
