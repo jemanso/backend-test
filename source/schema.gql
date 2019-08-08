@@ -23,6 +23,7 @@ input ListTicketsInput {
 }
 
 type Mutation {
+  initialize: ServerStatus!
   addTicket(input: AddTicketInput!): Ticket!
 }
 
@@ -30,8 +31,17 @@ type Mutation {
 scalar ObjectId
 
 type Query {
+  getStatus: ServerStatus!
   ticket(input: TicketInput!): Ticket
   listTickets(input: ListTicketsInput!): [Ticket!]!
+}
+
+"""The server status"""
+type ServerStatus {
+  graphql: Float!
+  tickets: Float!
+  ticketapi: Float!
+  omdbapi: Float!
 }
 
 type Ticket {

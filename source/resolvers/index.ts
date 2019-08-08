@@ -1,3 +1,4 @@
+import { ServerStatusResolver } from "./ServerStatus.resolver"
 import { TicketResolver } from "./Ticket.resolver"
 
-export default [TicketResolver]
+export default [ServerStatusResolver, TicketResolver]
