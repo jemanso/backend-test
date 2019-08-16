@@ -14,5 +14,8 @@
         "typechecking",
         "unoptimized"
     ],
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
+    "prettier.tslintIntegration": true,
+    "tslint.packageManager": "yarn",
+    "editor.formatOnSave": true
 }
