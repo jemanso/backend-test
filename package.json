@@ -1,17 +1,21 @@
 {
   "name": "backend-test",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "repository": "git@github.com:shopbonsai/backend-test.git",
   "author": "Mackie Drew <mackie@shopbonsai.ca>",
   "license": "MIT",
   "private": false,
+  "engines": {
+    "node": ">=10.16"
+  },
   "scripts": {
     "test": "jest .",
     "lint": "tslint --project '.'",
-    "prettify": "prettier --config ./.prettierrc.json --write './source/**/*.ts'",
+    "prettify": "prettier --config ./.prettierrc.json --write './src/**/*.ts'",
     "sane": "yarn lint && yarn prettify && yarn test",
-    "start": "ts-node source/main.ts",
-    "watch": "nodemon --watch 'source/**/*.ts' --ignore 'source/**/*.test.ts' --exec 'ts-node' source/main.ts dist/main.js",
+    "start": "ts-node src/main.ts",
+    "start:debug": "ts-node --inspect=5858 --debug-brk --ignore false src/main.ts",
+    "watch": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.test.ts' --exec 'ts-node' src/main.ts dist/main.js",
     "build": "tsc"
   },
   "dependencies": {
