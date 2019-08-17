@@ -1,8 +1,11 @@
 import { connect } from "mongoose"
 import "reflect-metadata"
 
-import { GQL_PORT, MONGODB_URI } from "./constants"
+import { GQL_PORT, MONGODB_URI, SERVER_ID } from "./constants"
 import { createServer } from "./graphql/server"
+import { createLogger } from "./logger"
+
+const logger = createLogger(SERVER_ID)
 
 const main = async () => {
   try {
@@ -11,16 +14,16 @@ const main = async () => {
       { useNewUrlParser: true, useCreateIndex: true },
     )
   } catch (mongoConnectError) {
-    console.error(mongoConnectError)
+    logger.error(mongoConnectError)
     process.exit(1)
   }
   const server = await createServer()
 
   try {
     const { url } = await server.listen(GQL_PORT)
-    console.log(`Tickets GraphQL API Server running at ${url}`)
+    logger.info(`Tickets GraphQL API Server running at ${url}`)
   } catch (apolloError) {
-    console.error(apolloError)
+    logger.error(apolloError)
     process.exit(1)
   }
 }
