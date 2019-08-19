@@ -1,7 +1,6 @@
 import { Arg, Mutation, Query, Resolver } from "type-graphql"
 
-import { ticketsSvc } from "../../services"
-import { ServerStatus } from "../schemas/status"
+import services from "../../services"
 import { Ticket } from "../schemas/ticket"
 import { AddTicketInput, ListTicketsInput, TicketInput } from "../schemas/ticket.input"
 
@@ -18,16 +17,12 @@ export class TicketResolver {
   }
 
   @Query(() => [Ticket])
-  public async listTickets(@Arg("input") input: ListTicketsInput): Promise<Ticket[]> {
-    const ticket1 = new Ticket()
-    const ticket2 = new Ticket()
-    return [ticket1, ticket2]
-    // const tickets = await TicketModel.find({})
-    // const result = tickets
-    //   .filter(ticket => ticket.date.getTime() < input.cursor.getTime())
-    //   .sort((a, b) => b.date.getTime() - a.date.getTime())
-    //   .slice(0, input.limit)
-    // return result
+  public async listTickets(@Arg("input") filter: ListTicketsInput): Promise<Ticket[]> {
+    if (services.tickets) {
+      return services.tickets.filterByCursor(filter) as Ticket[]
+    } else {
+      return []
+    }
   }
 
   @Mutation(() => Ticket)
@@ -35,15 +30,5 @@ export class TicketResolver {
     // TODO: addTicket
     const ticket = new Ticket()
     return ticket
-  }
-
-  @Mutation(() => ServerStatus)
-  public async initialize(): Promise<ServerStatus> {
-    // TODO: Initiate cleaning and storing of ticket data into MongoDB
-    await ticketsSvc.start()
-    const status = new ServerStatus()
-    // status.graphql = ServiceState.started
-    // status.ticketapi = SyncingState.syncing
-    return status
   }
 }

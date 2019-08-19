@@ -12,7 +12,7 @@ export class TicketInput {
 @InputType()
 export class ListTicketsInput {
   @Field(() => Date)
-  public cursor: Date
+  public after: Date
 
   @Field(() => Int)
   public limit: number

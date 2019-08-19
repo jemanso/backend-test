@@ -18,35 +18,31 @@ The javascript `Date` as string. Type represents date and time as the ISO Date s
 scalar DateTime
 
 input ListTicketsInput {
-  cursor: DateTime!
+  after: DateTime!
   limit: Int!
 }
 
 type Mutation {
-  addTicket(input: AddTicketInput!): Ticket!
   initialize: ServerStatus!
+  addTicket(input: AddTicketInput!): Ticket!
 }
 
 """Mongo object id scalar type"""
 scalar ObjectId
 
 type Query {
-  """Get Tickets direct from remote API calls"""
-  readRemoteTickets: String!
+  serverStatus: ServerStatus!
   ticket(input: TicketInput!): Ticket
   listTickets(input: ListTicketsInput!): [Ticket!]!
 }
 
 """The server status"""
 type ServerStatus {
-  graphql: Float!
-  tickets: Float!
-  ticketapi: Float!
-  omdbapi: Float!
+  tickets: String!
+  ticketapi: String!
 }
 
 type Ticket {
-  _id: ObjectId!
   remoteId: String!
   title: String!
   titles: [TitleVariant!]!
