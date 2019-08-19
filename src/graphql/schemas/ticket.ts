@@ -1,13 +1,11 @@
-import { ObjectId } from "mongodb"
 import { Field, Float, Int, ObjectType } from "type-graphql"
+
+import { ITicket } from "../../entities"
 
 import { Titles, TitleVariant } from "./titles"
 
 @ObjectType()
-export class Ticket {
-  @Field()
-  public readonly _id: ObjectId
-
+export class Ticket implements ITicket {
   @Field()
   public remoteId: string
 

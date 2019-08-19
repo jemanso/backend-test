@@ -29,5 +29,3 @@ export interface IMovie {
   production: string
   website: string
 }
-
-export * from "./movie.model"

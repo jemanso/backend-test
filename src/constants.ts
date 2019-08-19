@@ -1,9 +1,20 @@
-import * as dotenv from "dotenv"
+import crypto from "crypto"
+import dotenv from "dotenv"
+import os from "os"
 
 dotenv.config()
 
-export const DEFAULT_GENRE_DELIMITER = "|"
-export const DEFAULT_GENRE_STRING = "N/A"
+// Logger
+export const SERVER_ID = process.env.SERVER_ID || `${os.hostname()}.${process.pid}`
+export const SERVER_ID_MD5 = crypto
+  .createHash("md5")
+  .update(SERVER_ID)
+  .digest()
+  .toString("hex")
+
+// Genres
+export const DEFAULT_GENRE_DELIMITER = process.env.DEFAULT_GENRE_DELIMITER || "|"
+export const DEFAULT_GENRE_STRING = process.env.DEFAULT_GENRE_STRING || "N/A"
 
 // Ticket API
 export const TICKET_API_URL =

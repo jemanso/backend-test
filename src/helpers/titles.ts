@@ -1,4 +1,4 @@
-import { ITitles, ITitleVariant } from "../entities/tickets"
+import { ITitles, ITitleVariant } from "../entities"
 
 import { trimAllWhitespaces } from "./common"
 
