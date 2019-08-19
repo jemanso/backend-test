@@ -8,11 +8,11 @@ import {
   Typegoose,
 } from "typegoose"
 
-import { ITicket, ITitles } from "."
+import { ITicket, ITitles } from "../entities"
 
-export class Ticket extends Typegoose implements ITicket {
+export class TicketSchema extends Typegoose implements ITicket {
   @StaticMethod
-  public static findById(this: ModelType<Ticket>, id: any) {
+  public static findById(this: ModelType<TicketSchema>, id: any) {
     return this.findOne({ _id: id })
   }
 
@@ -44,6 +44,6 @@ export class Ticket extends Typegoose implements ITicket {
   public date: Date
 }
 
-export const TicketModel = new Ticket().getModelForClass(Ticket)
+export const TicketModel = new TicketSchema().getModelForClass(TicketSchema)
 
 export default TicketModel
