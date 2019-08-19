@@ -1,4 +1,5 @@
 import { ITicket } from "../entities/tickets/ticket"
+import { sortTickets } from "../helpers/common"
 import { createTicketAPI, TicketAPI } from "../remote"
 import { OMDBAPI } from "../remote/omdbapi"
 import { IRemoteTicket, IRemoteTicketsPage } from "../remote/ticketapi"
@@ -24,22 +25,31 @@ export class TicketsService {
   public async syncTickets(): Promise<boolean> {
     if (this.setSyncingState(SyncingState.syncing)) {
       this.ticketsCache = []
-      const responses = await this.ticketapi.fetchPages(100, 0)
-      responses.forEach((responsePage: IRemoteTicketsPage) => {
-        if (responsePage.data) {
-          this.importRemoteTickets(responsePage.data)
-        }
-      })
-      this.ticketsCache.sort((a, b) => a.date.getTime() - b.date.getTime())
+      const remoteTicketsPages = await this.ticketapi.fetchPages(100, 0)
+      this.importRemoteTicketsPages(remoteTicketsPages)
       this.setSyncingState(SyncingState.syncDone)
     }
     return true
+  }
+
+  public importRemoteTicketsPages(remoteTicketsPages: IRemoteTicketsPage[]): void {
+    remoteTicketsPages.forEach((responsePage: IRemoteTicketsPage) => {
+      if (responsePage.data) {
+        this.importRemoteTickets(responsePage.data)
+      }
+    })
+    this.sortTicketsCache()
   }
 
   public importRemoteTickets(remoteTickets: IRemoteTicket[]): void {
     remoteTickets.forEach(remoteTicket => {
       this.ticketsCache.push(ticketFromRemoteData(remoteTicket))
     })
+    this.sortTicketsCache()
+  }
+
+  public sortTicketsCache(): void {
+    this.ticketsCache.sort(sortTickets)
   }
 
   public filterByCursor(cursorFilter: ICursorFilter): ITicket[] {
