@@ -1,3 +1,5 @@
+import { IMovie } from "../movies/movie"
+
 import { ITitles } from "./titles"
 
 export interface ITicket {
@@ -9,4 +11,5 @@ export interface ITicket {
   inventory: number
   imageUrl: string
   date: Date
+  movie?: IMovie
 }

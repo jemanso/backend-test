@@ -1,21 +1,18 @@
+import { ServiceState, SyncingState } from "../helpers/states"
+
 import { TicketsService } from "./tickets.service"
-
-export enum ServiceState {
-  stopped = "stopped",
-  starting = "starting",
-  started = "started",
-}
-
-export enum SyncingState {
-  notInitialized = "notInitialized",
-  syncing = "syncing",
-  syncDone = "syncDone",
-  syncError = "syncError",
-}
 
 export interface IServicesLogger {
   info: (message: string) => void
   error: (message: string) => void
+}
+
+export interface IServicesIO {
+  connect: (...args: any[]) => Promise<any>
+  disconnect: (...args: any[]) => Promise<any>
+  read: (...args: any[]) => Promise<any>
+  write: (...args: any[]) => Promise<any>
+  seek: (...args: any[]) => Promise<any[]>
 }
 
 export interface IServerStatus {

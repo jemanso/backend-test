@@ -12,7 +12,7 @@ export const createServer = async (): Promise<ApolloServer> => {
     resolvers: [ServerResolver, TicketResolver],
     emitSchemaFile: path.resolve(__dirname, "schemas/schema.gql"),
     scalarsMap: [{ type: ObjectId, scalar: ObjectIdScalar }],
-    validate: false
+    validate: false,
   })
   const server = new ApolloServer({ schema, context: {} })
   return server

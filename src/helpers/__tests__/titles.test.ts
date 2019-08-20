@@ -35,9 +35,9 @@ describe("Titles", () => {
   describe("createComputedTitles()", () => {
     test("three titles", () => {
       expect(createComputedTitles("one?(two)(three)")).toEqual([
-        { title: "one?", keywords: ["one"], ignored: null },
-        { title: "two", keywords: ["two"], ignored: null },
-        { title: "three", keywords: ["three"], ignored: null },
+        { title: "one?", keywords: ["one"] },
+        { title: "two", keywords: ["two"] },
+        { title: "three", keywords: ["three"] },
       ])
     })
   })

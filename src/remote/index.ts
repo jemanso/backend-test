@@ -1,11 +1,12 @@
-import { TICKET_API_PAGELIMIT, TICKET_API_URL } from "../constants"
+import { OMDB_API_KEY, OMDB_API_URL, TICKET_API_PAGELIMIT, TICKET_API_URL } from "../constants"
 
+import { OMDBAPI } from "./omdbapi"
 import { TicketAPI } from "./ticketapi"
 
-export * from "./ticketapi/consumer"
-export * from "./omdbapi/interfaces"
+export * from "./ticketapi"
+export * from "./omdbapi"
 
-interface IConsumerLogger {
+export interface IConsumerLogger {
   info: (message: string) => void
   error: (message: string) => void
 }
@@ -13,18 +14,15 @@ interface IConsumerLogger {
 export function createTicketAPI(logger?: IConsumerLogger, limitPerPage?: number): TicketAPI {
   const consumer = new TicketAPI(TICKET_API_URL, limitPerPage || TICKET_API_PAGELIMIT)
   if (logger) {
-    consumer.on("fetch.page.request", ({ page, query }) => {
-      const reqId = `${consumer.uid}.${query.queryId}`
-      logger.info(`${reqId} fetching page ${page} limited by ${query.limit}`)
-    })
-    consumer.on("fetch.page.response", ({ page, query, response }) => {
-      const reqId = `${consumer.uid}.${query.queryId}`
-      logger.info(`${reqId} received page ${page} with ${(query.data || []).length} tickets`)
-    })
-    consumer.on("fetch.page.error", ({ page, error }) => {
-      const reqId = `${consumer.uid}`
-      logger.error(`${reqId} ERROR while fetching page ${page}: ${error.message}`)
-    })
+    consumer.bindEventsToLogger(logger)
+  }
+  return consumer
+}
+
+export function createOMDBAPI(logger?: IConsumerLogger, apikey?: string): OMDBAPI {
+  const consumer = new OMDBAPI(OMDB_API_URL, apikey || OMDB_API_KEY)
+  if (logger) {
+    consumer.bindEventsToLogger(logger)
   }
   return consumer
 }

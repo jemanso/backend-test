@@ -33,7 +33,6 @@ export const createComputedTitles = (rawMovieTitles?: string): ITitles => {
       return {
         title,
         keywords: computeTitleKeywords(title),
-        ignored: null,
       }
     },
   )

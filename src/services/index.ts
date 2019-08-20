@@ -1,4 +1,6 @@
-import { IServerStatus, IServices, IServicesLogger, ServiceState, SyncingState } from "./interfaces"
+import { ServiceState, SyncingState } from "../helpers/states"
+
+import { IServerStatus, IServicesLogger } from "./interfaces"
 import { TicketsService } from "./tickets.service"
 
 class Services {

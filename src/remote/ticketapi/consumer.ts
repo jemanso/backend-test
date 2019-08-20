@@ -1,11 +1,12 @@
 import crypto from "crypto"
 import { EventEmitter } from "events"
 
-import { validateResponse } from "../validations"
+import { IConsumerLogger } from ".."
 
 import { createTicketsQuery, fetchTicketsPage } from "./fetch"
-import { IRemoteTicketsPage, IRemoteTicketsQuery } from "./interfaces"
-import { prepareRemoteTickets } from "./transformers"
+import { prepareRemoteTickets } from "./helpers"
+import { IRemoteTicketsPage } from "./interfaces"
+import { validateResponse } from "./validations"
 
 export class TicketAPI extends EventEmitter {
   public readonly uid: string = crypto.randomBytes(4).toString("hex")
@@ -43,5 +44,20 @@ export class TicketAPI extends EventEmitter {
     }
     const responses = await Promise.all(promises)
     return responses
+  }
+
+  public bindEventsToLogger(logger: IConsumerLogger): void {
+    this.on("fetch.page.request", ({ page, query }) => {
+      const reqId = `${this.uid}.${query.queryId}`
+      logger.info(`${reqId} fetching page ${page} limited by ${query.limit}`)
+    })
+    this.on("fetch.page.response", ({ page, query, response }) => {
+      const reqId = `${this.uid}.${query.queryId}`
+      logger.info(`${reqId} received page ${page} with ${(query.data || []).length} tickets`)
+    })
+    this.on("fetch.page.error", ({ page, error }) => {
+      const reqId = `${this.uid}`
+      logger.error(`${reqId} ERROR while fetching page ${page}: ${error.message}`)
+    })
   }
 }
