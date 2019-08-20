@@ -1,5 +1,5 @@
-import { IRemoteTicket } from "../ticketapi"
-import { ticketFromRemoteData } from "../ticketapi/transformers"
+import { IRemoteTicket } from "../../remote/ticketapi"
+import { ticketFromRemoteData } from "../tickets"
 
 describe("ticket entity", () => {
   describe("ticketFromRemoteData(rawRemoteTicket)", () => {

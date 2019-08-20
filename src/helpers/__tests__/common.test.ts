@@ -1,17 +1,18 @@
-import { sortByField, trimAllWhitespaces } from "../common"
+import { ITicket } from "../../entities"
+import { sortTickets, trimAllWhitespaces } from "../common"
 
 describe("common helpers", () => {
-  describe("sortByField()", () => {
-    test("sort titles by variants", () => {
-      const list1 = []
-      list1.push({ title: "a", keywords: [], ignored: null })
-      list1.push({ title: "c", keywords: [], ignored: null })
-      list1.push({ title: "b", keywords: [], ignored: null })
-      const list2 = []
-      list2.push({ title: "a", keywords: [], ignored: null })
-      list2.push({ title: "b", keywords: [], ignored: null })
-      list2.push({ title: "c", keywords: [], ignored: null })
-      expect(list1.sort(sortByField.bind(null, "title"))).toEqual(list2)
+  describe("sortTickets()", () => {
+    const getList = () =>
+      [
+        { remoteId: "1", date: new Date("2001-01-01T00:00:00Z") },
+        { remoteId: "2", date: new Date("2001-01-01T00:00:00Z") },
+        { remoteId: "3", date: new Date("2000-01-01T00:00:00Z") },
+      ] as ITicket[]
+    test("sort tickets by {date + remoteId}", () => {
+      const list1 = getList()
+      const list2 = [list1[2], list1[0], list1[1]]
+      expect(list1.sort(sortTickets)).toEqual(list2)
     })
   })
 

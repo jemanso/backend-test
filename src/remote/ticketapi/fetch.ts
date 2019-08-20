@@ -1,8 +1,7 @@
 import got from "got"
 
-import { validatePageNumber } from "../validations"
-
 import { IRemoteTicketsQuery } from "./interfaces"
+import { validatePageNumber } from "./validations"
 
 export function createTicketsQuery(
   queryId: number,

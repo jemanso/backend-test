@@ -8,7 +8,7 @@ import {
   Typegoose,
 } from "typegoose"
 
-import { ITicket, ITitles } from "../entities"
+import { ITicket, ITitles } from "../../entities"
 
 export class TicketSchema extends Typegoose implements ITicket {
   @StaticMethod

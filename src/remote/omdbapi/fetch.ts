@@ -1,53 +1,41 @@
 import got from "got"
 
-import { validatePageNumber } from "../validations"
+import { IRemoteMovieQuery, IRemoteMoviesSearchQuery } from "./interfaces"
+import { validatePageNumber } from "./validations"
 
-import { IRemoteMoviesSearch } from "./interfaces"
+export function createMovieQueryByImdbId(
+  queryId: number,
+  baseUrl: string,
+  apikey: string,
+  imdbId: string,
+): IRemoteMovieQuery {
+  return { queryId, baseUrl, apikey, imdbId }
+}
 
-export function createMoviesQuery(
+export function createMoviesSearchQuery(
   queryId: number,
   baseUrl: string,
   apikey: string,
   search: string,
   page: number,
-): IRemoteMoviesSearch {
+): IRemoteMoviesSearchQuery {
   validatePageNumber(page)
-  return {
-    queryId,
-    baseUrl,
-    apikey,
-    search,
-    page,
-  }
+  return { queryId, baseUrl, apikey, search, page }
 }
 
-export async function fetchMoviesForTicket(ticket: ITicket): Promise<any[]> {
-  let page = 1
-  const movies: any[] = []
-  for (const title of ticket.titles) {
-    const resp = await omdbSearchForTitleKeywords(title.keywords, page++, OMDB_API_KEY)
-    title.movies = resp
-    movies.push(resp)
+export async function fetchMovie(movieQuery: IRemoteMovieQuery): Promise<any> {
+  const query = {
+    apikey: movieQuery.apikey,
+    plot: "full",
+    i: movieQuery.imdbId,
+    t: movieQuery.title,
   }
-  return movies
+  const resp = await got(movieQuery.baseUrl, { query, json: true })
+  return resp
 }
 
-export async function omdbSearchForTitleKeywords(
-  titleKeywords: string[],
-  page: number,
-  apikey?: string,
-): Promise<IOMDBSearchResult> {
-  if (!titleKeywords.length) {
-    return { movies: [], matchs: 0 }
-  }
-  const url = `${omdbapiURLWithApiKey(apikey)}&page=${page || "1"}&s=${titleKeywords.join("+")}`
-  console.log(url)
-
-  const resp = await got(url, { json: true })
-  return {
-    movies: resp.body.Search || [],
-    matchs: +resp.body.totalResults || 0,
-    result: resp.body.Response,
-    error: resp.body.error || null,
-  }
+export async function searchMovies(movieQuery: IRemoteMoviesSearchQuery): Promise<any> {
+  const query = { apikey: movieQuery.apikey, s: movieQuery.search, page: movieQuery.page }
+  const resp = await got(movieQuery.baseUrl, { query, json: true })
+  return resp
 }

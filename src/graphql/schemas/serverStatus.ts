@@ -1,6 +1,7 @@
 import { Field, ObjectType } from "type-graphql"
 
-import { IServerStatus, ServiceState, SyncingState } from "../../services"
+import { ServiceState, SyncingState } from "../../helpers/states"
+import { IServerStatus } from "../../services"
 
 @ObjectType({ description: "The server status" })
 export class ServerStatus implements IServerStatus {
