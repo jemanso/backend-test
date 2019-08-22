@@ -40,6 +40,7 @@ type Query {
 type ServerStatus {
   tickets: String!
   ticketapi: String!
+  movies: String!
 }
 
 type Ticket {

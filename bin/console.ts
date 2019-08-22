@@ -22,9 +22,9 @@ async function startReading(pages: number = 5, skip: number = 0) {
   showConsole()
 }
 
-async function showMovieByImdbId(imdbId: string) {
+async function showMovieByImdbId(imdbID: string) {
   const consumer = createOMDBAPI(logger)
-  const movie = await consumer.fetchByImdbId(imdbId)
+  const movie = await consumer.fetchByImdbId(imdbID)
   console.log(movie)
 }
 

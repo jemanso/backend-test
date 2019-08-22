@@ -10,4 +10,7 @@ export class ServerStatus implements IServerStatus {
 
   @Field()
   public ticketapi: SyncingState = SyncingState.notInitialized
+
+  @Field()
+  public movies: ServiceState = ServiceState.stopped
 }
