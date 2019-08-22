@@ -5,6 +5,8 @@ export interface IRating {
 
 export interface IMovie {
   imdbID: string
+  imdbRating: string
+  imdbVotes: string
   title: string
   year: string
   rated: string
@@ -21,8 +23,6 @@ export interface IMovie {
   poster: string
   ratings: IRating[]
   metascore: string
-  imdbRating: string
-  imdbVotes: string
   type: string
   dvd: string
   boxOffice: string

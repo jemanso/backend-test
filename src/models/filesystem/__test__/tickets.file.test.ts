@@ -1,6 +1,14 @@
-import { TICKET_CACHE_FILE } from "../../../constants"
+import path from "path"
+
+import { CACHE_FOLDER } from "../../../constants"
 import { ITicket } from "../../../entities"
+import { IDatasourceLogger } from "../../interfaces"
 import { TicketsFileIO } from "../tickets.file"
+
+const logger: IDatasourceLogger = {
+  info: () => {},
+  error: () => {},
+}
 
 describe("DatasourceIO: Filesystem", () => {
   describe("TicketsIO", () => {
@@ -14,9 +22,10 @@ describe("DatasourceIO: Filesystem", () => {
       imageUrl: "http://dummyimage.com/1459x751.png/cc0000/ffffff",
       date: new Date("2017-09-27T05:06:56Z"),
     }
-    const ticketsFile = new TicketsFileIO()
+    const filename = path.join(path.resolve(CACHE_FOLDER), "tickets_cache.testdb.json")
+    const ticketsFile = new TicketsFileIO(filename, logger)
     test("connect", async () => {
-      expect(await ticketsFile.connect(`${TICKET_CACHE_FILE}.test`)).toEqual(true)
+      expect(await ticketsFile.connect()).toEqual(true)
     })
     test("write", async () => {
       expect(await ticketsFile.write(ticketSample as ITicket)).toEqual(true)

@@ -7,9 +7,9 @@ export function createMovieQueryByImdbId(
   queryId: number,
   baseUrl: string,
   apikey: string,
-  imdbId: string,
+  imdbID: string,
 ): IRemoteMovieQuery {
-  return { queryId, baseUrl, apikey, imdbId }
+  return { queryId, baseUrl, apikey, imdbID }
 }
 
 export function createMoviesSearchQuery(
@@ -27,7 +27,7 @@ export async function fetchMovie(movieQuery: IRemoteMovieQuery): Promise<any> {
   const query = {
     apikey: movieQuery.apikey,
     plot: "full",
-    i: movieQuery.imdbId,
+    i: movieQuery.imdbID,
     t: movieQuery.title,
   }
   const resp = await got(movieQuery.baseUrl, { query, json: true })

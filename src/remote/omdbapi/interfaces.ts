@@ -43,7 +43,7 @@ export interface IRemoteMovieQuery {
   queryId: number
   baseUrl: string
   apikey: string
-  imdbId?: string
+  imdbID?: string
   title?: string
 }
 

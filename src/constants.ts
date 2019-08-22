@@ -17,7 +17,7 @@ export const DEFAULT_GENRE_DELIMITER = process.env.DEFAULT_GENRE_DELIMITER || "|
 export const DEFAULT_GENRE_STRING = process.env.DEFAULT_GENRE_STRING || "N/A"
 
 // Cache
-export const TICKET_CACHE_FILE = process.env.TICKET_CACHE_FILE || "./cache/tickets_cache.json"
+export const CACHE_FOLDER = process.env.CACHE_FOLDER || "./cache"
 
 // Ticket API
 export const TICKET_API_URL =

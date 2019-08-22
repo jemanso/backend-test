@@ -18,6 +18,7 @@ export interface IServicesIO {
 export interface IServerStatus {
   tickets: ServiceState
   ticketapi: SyncingState
+  movies: ServiceState
 }
 
 export interface IServices {

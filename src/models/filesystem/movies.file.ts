@@ -1,12 +1,12 @@
 import { readFile, writeFile } from "fs"
 
 import { IDatasourceIO } from ".."
-import { ITicket } from "../../entities"
-import { sortTickets } from "../../helpers/common"
+import { IMovie } from "../../entities"
+import { sortMovies } from "../../helpers/common"
 import { IDatasourceLogger } from "../interfaces"
 
-export class TicketsFileIO implements IDatasourceIO {
-  public memoryCache: ITicket[] = []
+export class MoviesFileIO implements IDatasourceIO {
+  public memoryCache: IMovie[] = []
 
   constructor(public filename: string | null, public logger: IDatasourceLogger) {}
 
@@ -29,7 +29,6 @@ export class TicketsFileIO implements IDatasourceIO {
           }
         } else {
           this.memoryCache = JSON.parse(data)
-          this.memoryCache.forEach(t => (t.date = new Date(t.date)))
           this.logger.info(`file loaded successfully ${this.filename}`)
           resolve(true)
         }
@@ -41,41 +40,37 @@ export class TicketsFileIO implements IDatasourceIO {
     return this.saveMemoryCache()
   }
 
-  public async read(remoteId: string): Promise<ITicket | null> {
+  public async read(imdbID: string): Promise<IMovie | null> {
     return new Promise(resolve => {
-      this.logger.info(`reading ticket, remoteId ${remoteId}`)
-      for (const ticket of this.memoryCache) {
-        if (ticket.remoteId === remoteId) {
-          resolve(ticket)
+      this.logger.info(`reading Movie, imdbID ${imdbID}`)
+      for (const Movie of this.memoryCache) {
+        if (Movie.imdbID === imdbID) {
+          resolve(Movie)
         }
       }
       resolve(null)
     })
   }
 
-  public async write(ticket: ITicket): Promise<boolean> {
+  public async write(Movie: IMovie): Promise<boolean> {
     return new Promise(resolve => {
-      this.logger.info(`writing ticket, remoteId ${ticket.remoteId}`)
-      const newCache = this.memoryCache.filter(
-        ticketCache => !(ticketCache.remoteId === ticket.remoteId),
-      )
-      newCache.push(ticket)
-      newCache.sort(sortTickets)
+      this.logger.info(`writing Movie, imdbID ${Movie.imdbID}`)
+      const newCache = this.memoryCache.filter(MovieCache => !(MovieCache.imdbID === Movie.imdbID))
+      newCache.push(Movie)
+      newCache.sort(sortMovies)
       this.memoryCache = newCache
       this.saveMemoryCache()
       resolve(true)
     })
   }
 
-  public async seek(after: Date, limit: number): Promise<ITicket[]> {
+  public async seek(after: string, limit: number): Promise<IMovie[]> {
     return new Promise(resolve => {
-      this.logger.info(`seeking tickets after ${after} limited by ${limit}`)
+      this.logger.info(`seeking Movies after ${after} limited by ${limit}`)
       if (!this.memoryCache) {
         resolve([])
       }
-      resolve(
-        this.memoryCache.filter(ticket => ticket.date.getTime() > after.getTime()).slice(0, limit),
-      )
+      resolve(this.memoryCache.filter(Movie => Movie.imdbID > after).slice(0, limit))
     })
   }
 

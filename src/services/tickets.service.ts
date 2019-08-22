@@ -1,4 +1,3 @@
-import { TICKET_CACHE_FILE } from "../constants"
 import { ITicket } from "../entities"
 import {
   canChangeServiceState,
@@ -7,7 +6,6 @@ import {
   SyncingState,
 } from "../helpers/states"
 import { ticketFromRemoteData } from "../helpers/tickets"
-import { createDatasource } from "../models"
 import {
   createOMDBAPI,
   createTicketAPI,
@@ -21,20 +19,16 @@ import { IServicesLogger } from "."
 import { ICursorFilter, IServicesIO } from "./interfaces"
 
 export class TicketsService {
-  public omdbapi: OMDBAPI
   public ticketapi: TicketAPI
-  public datasource: IServicesIO
   public serviceState: ServiceState = ServiceState.stopped
   public syncingState: SyncingState = SyncingState.notInitialized
 
-  constructor(public logger: IServicesLogger) {}
+  constructor(public ticketsDS: IServicesIO, public logger: IServicesLogger) {}
 
   public async start(): Promise<boolean> {
     this.setServiceState(ServiceState.starting)
-    this.omdbapi = createOMDBAPI(this.logger)
     this.ticketapi = createTicketAPI(this.logger)
-    this.datasource = createDatasource("file", this.logger)
-    await this.datasource.connect(TICKET_CACHE_FILE)
+    await this.ticketsDS.connect()
     return this.setServiceState(ServiceState.started)
   }
 
@@ -42,8 +36,6 @@ export class TicketsService {
     if (this.setSyncingState(SyncingState.syncing)) {
       const remoteTicketsPages = await this.ticketapi.fetchPages(100, 0)
       this.importRemoteTicketsPages(remoteTicketsPages)
-      await this.datasource.disconnect()
-      await this.datasource.connect(TICKET_CACHE_FILE)
       this.setSyncingState(SyncingState.syncDone)
     }
     return true
@@ -59,12 +51,12 @@ export class TicketsService {
 
   public importRemoteTickets(remoteTickets: IRemoteTicket[]): void {
     remoteTickets.forEach(remoteTicket => {
-      this.datasource.write(ticketFromRemoteData(remoteTicket))
+      this.ticketsDS.write(ticketFromRemoteData(remoteTicket))
     })
   }
 
   public async filterByCursor(cursorFilter: ICursorFilter): Promise<ITicket[]> {
-    const tickets = await this.datasource.seek(cursorFilter.after, cursorFilter.limit)
+    const tickets = await this.ticketsDS.seek(cursorFilter.after, cursorFilter.limit)
     return tickets
   }
 
