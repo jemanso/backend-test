@@ -32,7 +32,7 @@ scalar ObjectId
 
 type Query {
   serverStatus: ServerStatus!
-  ticket(input: TicketInput!): Ticket
+  ticket(remoteId: String!): Ticket
   listTickets(input: ListTicketsInput!): [Ticket!]!
 }
 

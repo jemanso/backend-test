@@ -6,14 +6,7 @@ import {
   SyncingState,
 } from "../helpers/states"
 import { ticketFromRemoteData } from "../helpers/tickets"
-import {
-  createOMDBAPI,
-  createTicketAPI,
-  IRemoteTicket,
-  IRemoteTicketsPage,
-  OMDBAPI,
-  TicketAPI,
-} from "../remote"
+import { createTicketAPI, IRemoteTicket, IRemoteTicketsPage, TicketAPI } from "../remote"
 
 import { IServicesLogger } from "."
 import { ICursorFilter, IServicesIO } from "./interfaces"
@@ -62,6 +55,11 @@ export class TicketsService {
     remoteTickets.forEach(remoteTicket => {
       this.ticketsDS.write(ticketFromRemoteData(remoteTicket))
     })
+  }
+
+  public async getTicketByRemoteId(remoteId: string): Promise<ITicket | null> {
+    const ticket = await this.ticketsDS.read(remoteId)
+    return ticket
   }
 
   public async filterByCursor(cursorFilter: ICursorFilter): Promise<ITicket[]> {

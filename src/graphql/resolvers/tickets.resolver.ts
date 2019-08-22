@@ -8,13 +8,12 @@ import { AddTicketInput, ListTicketsInput, TicketInput } from "../schemas/ticket
 @Resolver(() => Ticket)
 export class TicketResolver {
   @Query(() => Ticket, { nullable: true })
-  public async ticket(@Arg("input") ticketInput: TicketInput): Promise<ITicket> {
-    // const ticket = await TicketModel.findById(ticketInput.id)
-    // if (!ticket) {
-    //   throw new Error("No ticket found!")
-    // }
-    const ticket = new Ticket()
-    return ticket
+  public async ticket(@Arg("remoteId") remoteId: string): Promise<ITicket | null> {
+    if (services.tickets) {
+      return services.tickets.getTicketByRemoteId(remoteId)
+    } else {
+      return null
+    }
   }
 
   @Query(() => [Ticket])
