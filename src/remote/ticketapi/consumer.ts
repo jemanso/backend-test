@@ -24,11 +24,12 @@ export class TicketAPI extends EventEmitter {
       //   throw new Error(`fake error on page ${page}!`)
       // }
       const response = await fetchTicketsPage(query)
-      this.emit("fetch.page.response", { page, query, response })
       validateResponse(response)
+      response.tickets = prepareRemoteTickets(response.body as any[])
+      this.emit("fetch.page.response", { page, query, response })
       return {
         page,
-        data: prepareRemoteTickets(response.body as any[]),
+        data: response.tickets,
       }
     } catch (error) {
       const pageError = { page, error: error.message }
@@ -53,7 +54,7 @@ export class TicketAPI extends EventEmitter {
     })
     this.on("fetch.page.response", ({ page, query, response }) => {
       const reqId = `${this.uid}.${query.queryId}`
-      logger.info(`${reqId} received page ${page} with ${(query.data || []).length} tickets`)
+      logger.info(`${reqId} received page ${page} with ${(response.tickets || []).length} tickets`)
     })
     this.on("fetch.page.error", ({ page, error }) => {
       const reqId = `${this.uid}`
