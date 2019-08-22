@@ -7,6 +7,7 @@ import { IDatasourceLogger } from "../interfaces"
 
 export class TicketsFileIO implements IDatasourceIO {
   public memoryCache: ITicket[] = []
+  private willSave: NodeJS.Timeout | null = null
 
   constructor(public filename: string | null, public logger: IDatasourceLogger) {}
 
@@ -38,6 +39,9 @@ export class TicketsFileIO implements IDatasourceIO {
   }
 
   public async disconnect(): Promise<boolean> {
+    if (this.willSave) {
+      clearTimeout(this.willSave)
+    }
     return this.saveMemoryCache()
   }
 
@@ -62,7 +66,7 @@ export class TicketsFileIO implements IDatasourceIO {
       newCache.push(ticket)
       newCache.sort(sortTickets)
       this.memoryCache = newCache
-      this.saveMemoryCache()
+      this.unsafeSaveMemoryCache()
       resolve(true)
     })
   }
@@ -79,6 +83,15 @@ export class TicketsFileIO implements IDatasourceIO {
     })
   }
 
+  private unsafeSaveMemoryCache() {
+    if (!this.willSave) {
+      this.willSave = setTimeout(_ => {
+        this.willSave = null
+        this.saveMemoryCache()
+      }, 2000)
+    }
+  }
+
   private saveMemoryCache(): Promise<boolean> {
     return new Promise((resolve, reject) => {
       if (!this.filename) {
@@ -90,6 +103,7 @@ export class TicketsFileIO implements IDatasourceIO {
         if (err) {
           reject(err)
         }
+        this.logger.info(`file saved successfully ${this.filename}`)
         resolve(true)
       })
     })

@@ -34,8 +34,17 @@ export class TicketsService {
 
   public async syncTickets(): Promise<boolean> {
     if (this.setSyncingState(SyncingState.syncing)) {
-      const remoteTicketsPages = await this.ticketapi.fetchPages(100, 0)
-      this.importRemoteTicketsPages(remoteTicketsPages)
+      let skip = 0
+      const pages = 4
+      do {
+        const remoteTicketsPages = await this.ticketapi.fetchPages(pages, skip)
+        this.importRemoteTicketsPages(remoteTicketsPages)
+        if (this.hasMoreRemoteTicketsPages(remoteTicketsPages)) {
+          skip += pages
+        } else {
+          skip = -1
+        }
+      } while (skip > 0)
       this.setSyncingState(SyncingState.syncDone)
     }
     return true
@@ -76,5 +85,24 @@ export class TicketsService {
       return true
     }
     return false
+  }
+
+  private hasMoreRemoteTicketsPages(pages: IRemoteTicketsPage[]): boolean {
+    let errorsCount = 0
+    let hasEmptyPage = false
+    for (const page of pages) {
+      if (page.error) {
+        this.logger.info(`tickets page ${page.page} got ERROR ${page.error}`)
+        errorsCount++
+      } else {
+        if (!page.data || !page.data.length) {
+          hasEmptyPage = true
+        }
+      }
+    }
+    if (hasEmptyPage || errorsCount === pages.length) {
+      return false
+    }
+    return true
   }
 }
